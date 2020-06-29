@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:elevation="15dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark">
+
+        <TextView
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:text="Product Name"
+            android:textColor="@android:color/white"
+            android:textSize="14dp"
+            android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:text="Product Quantity"
+            android:textColor="@android:color/white"
+            android:textSize="14dp"
+            android:layout_marginLeft="5dp"
+            android:layout_alignParentEnd="true"
+            android:textAlignment="viewEnd"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
