@@ -80,25 +80,16 @@ public class ProductDetailsActivity extends AppCompatActivity {
         cartMap.put("quantity", productQuantityBtn.getNumber());
         cartMap.put("discount", "");
 
-        cartListRef.child("User Order").child(Prevalent.currentOnlineUser.getPhone())
+        cartListRef.child(Prevalent.currentOnlineUser.getPhone())
                 .child("Products").child(productID).updateChildren(cartMap)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()) {
-                            cartListRef.child("Admin Invoice").child(Prevalent.currentOnlineUser.getPhone())
-                                    .child("Products").child(productID).updateChildren(cartMap)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if(task.isSuccessful()) {
-                                                Toast.makeText(ProductDetailsActivity.this, "Added to Cart!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProductDetailsActivity.this, "Added to Cart!", Toast.LENGTH_SHORT).show();
 
-                                                Intent intent = new Intent(ProductDetailsActivity.this, HomeActivity.class);
-                                                startActivity(intent);
-                                            }
-                                        }
-                                    });
+                            Intent intent = new Intent(ProductDetailsActivity.this, HomeActivity.class);
+                            startActivity(intent);
                         }
                     }
                 });

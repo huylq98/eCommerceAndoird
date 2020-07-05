@@ -83,7 +83,6 @@ public class AdminViewNewOrdersActivity extends AppCompatActivity {
                                             String userID = getRef(i).getKey();
                                             removeOrder(userID);
                                         } else {
-                                            finish();
                                         }
                                     }
                                 });
@@ -106,14 +105,14 @@ public class AdminViewNewOrdersActivity extends AppCompatActivity {
     private void removeOrder(String userID) {
         ordersRef.child(userID).removeValue();
         FirebaseDatabase.getInstance().getReference()
-                .child("Carts").child("Admin Invoice").child(userID).removeValue();
+                .child("Carts").child(userID).removeValue();
     }
 
     public static class AdminOrderViewHolder extends RecyclerView.ViewHolder {
-        public TextView username, userphone, totalAmount, dateTime, useraddress;
-        public Button showOrdersBtn;
+        TextView username, userphone, totalAmount, dateTime, useraddress;
+        Button showOrdersBtn;
 
-        public AdminOrderViewHolder(@NonNull View itemView) {
+        AdminOrderViewHolder(@NonNull View itemView) {
             super(itemView);
 
             username = itemView.findViewById(R.id.order_user_name);

@@ -32,12 +32,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_order);
 
-        totalAmount = getIntent().getStringExtra("Total Price");
-
-        etName = findViewById(R.id.shipment_name);
-        etPhone = findViewById(R.id.shipment_phone_number);
-        etAddress = findViewById(R.id.shipment_address);
-        confirmOrderBtn = findViewById(R.id.confirm_order_btn);
+        setupComponent();
 
         confirmOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +40,19 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                 checkInfo();
             }
         });
+    }
+
+    private void setupComponent() {
+        totalAmount = getIntent().getStringExtra("Total Price");
+
+        etName = findViewById(R.id.shipment_name);
+        etPhone = findViewById(R.id.shipment_phone_number);
+        etAddress = findViewById(R.id.shipment_address);
+        confirmOrderBtn = findViewById(R.id.confirm_order_btn);
+
+        etName.setText(Prevalent.currentOnlineUser.getName());
+        etPhone.setText(Prevalent.currentOnlineUser.getPhone());
+        etAddress.setText(Prevalent.currentOnlineUser.getAddress());
     }
 
     private void checkInfo() {
@@ -85,22 +93,11 @@ public class ConfirmOrderActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()) {
-                    FirebaseDatabase.getInstance().getReference().child("Carts")
-                            .child("User Order")
-                            .child(Prevalent.currentOnlineUser.getPhone())
-                            .removeValue()
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()) {
-                                        Toast.makeText(ConfirmOrderActivity.this, "Order successfully!", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(ConfirmOrderActivity.this, HomeActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                }
-                            });
+                    Toast.makeText(ConfirmOrderActivity.this, "Order successfully!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ConfirmOrderActivity.this, HomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });

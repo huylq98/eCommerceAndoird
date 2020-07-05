@@ -22,6 +22,7 @@ import com.project.ecommerce.model.User;
 import com.project.ecommerce.prevalent.Prevalent;
 import com.rey.material.widget.CheckBox;
 
+
 import io.paperdb.Paper;
 
 public class LoginActivity extends AppCompatActivity {
@@ -47,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
 
         checkBoxRememberMe = findViewById(R.id.remember_me_chkb);
         Paper.init(this);
-        
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,9 +81,9 @@ public class LoginActivity extends AppCompatActivity {
         String phoneNumber = inputPhoneNumber.getText().toString().trim();
         String password = inputPassword.getText().toString().trim();
 
-        if(TextUtils.isEmpty(phoneNumber)) {
+        if (TextUtils.isEmpty(phoneNumber)) {
             Toast.makeText(this, "Please enter your phone number...", Toast.LENGTH_SHORT).show();
-        } else  if(TextUtils.isEmpty(password)) {
+        } else if (TextUtils.isEmpty(password)) {
             Toast.makeText(this, "Please enter your password...", Toast.LENGTH_SHORT).show();
         } else {
             loadingBar.setTitle("Login Account");
@@ -95,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void validateAccount(final String phoneNumber, final String password) {
-        if(checkBoxRememberMe.isChecked()) {
+        if (checkBoxRememberMe.isChecked()) {
             Paper.book().write(Prevalent.userPhoneKey, phoneNumber);
             Paper.book().write(Prevalent.userPasswordKey, password);
         }
@@ -106,18 +107,19 @@ public class LoginActivity extends AppCompatActivity {
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child( parentDBName).child(phoneNumber).exists()){
-                    User user = dataSnapshot.child( parentDBName).child(phoneNumber).getValue(User.class);
+                if (dataSnapshot.child(parentDBName).child(phoneNumber).exists()) {
+                    User user = dataSnapshot.child(parentDBName).child(phoneNumber).getValue(User.class);
 
                     if (user.getPhone().equals(phoneNumber)) {
-                        if(user.getPassword().equals(password)) {
-                            if(parentDBName.equals("Admins")) {
+                        if (user.getPassword().equals(password)) {
+                            if (parentDBName.equals("Admins")) {
                                 Toast.makeText(LoginActivity.this, "Welcome admin, you are logged in successfully.", Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
 
                                 Intent intent = new Intent(LoginActivity.this, AdminCategoryActivity.class);
+                                Prevalent.currentOnlineUser = user;
                                 startActivity(intent);
-                            } else if(parentDBName.equals("Users")) {
+                            } else if (parentDBName.equals("Users")) {
                                 Toast.makeText(LoginActivity.this, "Logged in successfully.", Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
 

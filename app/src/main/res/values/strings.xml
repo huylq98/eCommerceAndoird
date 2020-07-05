@@ -15,4 +15,6 @@
     <string name="home_second">Home Second</string>
     <string name="open_navigation">Open navigation drawer</string>
     <string name="close_navigation">Close navigation drawer</string>
+    <string name="facebook_app_id">302268420817343</string>
+    <string name="fb_login_protocol_scheme">fb302268420817343</string>
 </resources>

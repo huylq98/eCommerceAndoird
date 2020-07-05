@@ -8,12 +8,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import io.paperdb.Paper;
+
 public class AdminCategoryActivity extends AppCompatActivity {
 
     private ImageView tshirtCategory, sportCategory, femaleDressCategory, sweatherCategory;
     private ImageView glassCategory, purseBagCategory, hatCategory, shoeCategory;
     private ImageView headPhoneCategory, laptopCategory, watchCategory, phoneCategory;
-    private Button logoutBtn, checkNewOrdersBtn;
+    private Button logoutBtn, checkNewOrdersBtn, maintainProductsBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +139,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Paper.book().destroy();
                 Intent intent = new Intent(AdminCategoryActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -149,6 +152,16 @@ public class AdminCategoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(AdminCategoryActivity.this, AdminViewNewOrdersActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        maintainProductsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AdminCategoryActivity.this, HomeActivity.class);
+                intent.putExtra("Admin", "Admin");
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -171,6 +184,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
 
         logoutBtn = findViewById(R.id.admin_logout_btn);
         checkNewOrdersBtn = findViewById(R.id.check_orders_btn);
+        maintainProductsBtn = findViewById(R.id.maintain_btn);
     }
 
 

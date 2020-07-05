@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         String userPhoneKey = Paper.book().read(Prevalent.userPhoneKey);
         String userPasswordKey = Paper.book().read(Prevalent.userPasswordKey);
 
-        if(userPhoneKey != "" && userPasswordKey != "") {
+        if(userPhoneKey != null  && userPasswordKey != null) {
             if(!TextUtils.isEmpty(userPasswordKey) && !TextUtils.isEmpty(userPasswordKey)) {
                 processAccess(userPhoneKey, userPasswordKey);
 
@@ -74,25 +74,36 @@ public class MainActivity extends AppCompatActivity {
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child("Users").child(phoneNumber).exists()){
-                    User user = dataSnapshot.child("Users").child(phoneNumber).getValue(User.class);
+                if (dataSnapshot.child("Users").child(phoneNumber).exists() || dataSnapshot.child("Admins").child(phoneNumber).exists()) {
+                    if (dataSnapshot.child("Users").child(phoneNumber).exists()) {
+                        User user = dataSnapshot.child("Users").child(phoneNumber).getValue(User.class);
 
-                    if (user.getPhone().equals(phoneNumber)) {
-                        if(user.getPassword().equals(password)) {
-                            Toast.makeText(MainActivity.this, "Logged in successfully.", Toast.LENGTH_SHORT).show();
-                            loadingBar.dismiss();
+                        if (user.getPhone().equals(phoneNumber)) {
+                            if(user.getPassword().equals(password)) {
+                                Toast.makeText(MainActivity.this, "Logged in successfully.", Toast.LENGTH_SHORT).show();
+                                loadingBar.dismiss();
 
-                            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                            Prevalent.currentOnlineUser = user;
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(MainActivity.this, "Logged in failed.", Toast.LENGTH_SHORT).show();
-                            loadingBar.dismiss();
+                                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                                Prevalent.currentOnlineUser = user;
+                                startActivity(intent);
+                            }
+                        }
+
+                        if(dataSnapshot.child("Admins").child(phoneNumber).exists()) {
+                            User admin = dataSnapshot.child("Admins").child(phoneNumber).getValue(User.class);
+
+                            if (admin.getPhone().equals(phoneNumber)) {
+                                if (admin.getPassword().equals(password)) {
+                                    Toast.makeText(MainActivity.this, "Logged in successfully.", Toast.LENGTH_SHORT).show();
+                                    loadingBar.dismiss();
+
+                                    Intent intent = new Intent(MainActivity.this, AdminCategoryActivity.class);
+                                    Prevalent.currentOnlineUser = admin;
+                                    startActivity(intent);
+                                }
+                            }
                         }
                     }
-                } else {
-                    Toast.makeText(MainActivity.this, "Account with this " + phoneNumber + " does not exist.", Toast.LENGTH_SHORT).show();
-                    loadingBar.dismiss();
                 }
             }
 
