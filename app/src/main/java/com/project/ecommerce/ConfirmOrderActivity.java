@@ -76,6 +76,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
         saveCurrentTime= currentTime.format(calForDate.getTime());
 
+        final DatabaseReference cartsRef = FirebaseDatabase.getInstance().getReference().child("Carts").child("Users");
         final DatabaseReference ordersRef = FirebaseDatabase.getInstance().getReference()
                 .child("Orders")
                 .child(Prevalent.currentOnlineUser.getPhone());
@@ -93,6 +94,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()) {
+                    cartsRef.child(Prevalent.currentOnlineUser.getPhone()).removeValue();
                     Toast.makeText(ConfirmOrderActivity.this, "Order successfully!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ConfirmOrderActivity.this, HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

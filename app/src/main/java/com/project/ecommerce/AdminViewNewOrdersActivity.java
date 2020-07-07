@@ -26,7 +26,7 @@ import java.util.HashMap;
 public class AdminViewNewOrdersActivity extends AppCompatActivity {
 
     private RecyclerView ordersList;
-    private DatabaseReference ordersRef, cartsRef;
+    private DatabaseReference ordersRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +34,6 @@ public class AdminViewNewOrdersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_view_new_orders);
 
         ordersRef = FirebaseDatabase.getInstance().getReference().child("Orders");
-        cartsRef = FirebaseDatabase.getInstance().getReference().child("Carts").child("User");
 
         ordersList = findViewById(R.id.orders_list);
         ordersList.setLayoutManager(new LinearLayoutManager(this));
@@ -114,7 +113,6 @@ public class AdminViewNewOrdersActivity extends AppCompatActivity {
         HashMap<String, Object> ordersMap = new HashMap<>();
         ordersMap.put("state", "Delivered");
         ordersRef.child(userID).updateChildren(ordersMap);
-        cartsRef.child(userID).removeValue();
     }
 
     public static class AdminOrderViewHolder extends RecyclerView.ViewHolder {
