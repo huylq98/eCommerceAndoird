@@ -14,7 +14,6 @@ public class AdminCategoryActivity extends AppCompatActivity {
 
     private ImageView tshirtCategory, sportCategory, femaleDressCategory, sweatherCategory;
     private ImageView glassCategory, purseBagCategory, hatCategory, shoeCategory;
-    private ImageView headPhoneCategory, laptopCategory, watchCategory, phoneCategory;
     private Button logoutBtn, checkNewOrdersBtn, maintainProductsBtn;
 
     @Override
@@ -100,42 +99,6 @@ public class AdminCategoryActivity extends AppCompatActivity {
             }
         });
 
-        headPhoneCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
-                intent.putExtra("category", "headPhones");
-                startActivity(intent);
-            }
-        });
-
-        laptopCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
-                intent.putExtra("category", "laptops");
-                startActivity(intent);
-            }
-        });
-
-        watchCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
-                intent.putExtra("category", "watches");
-                startActivity(intent);
-            }
-        });
-
-        phoneCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
-                intent.putExtra("category", "mobilePhones");
-                startActivity(intent);
-            }
-        });
-
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,11 +139,6 @@ public class AdminCategoryActivity extends AppCompatActivity {
         purseBagCategory = findViewById(R.id.purses_bags);
         hatCategory = findViewById(R.id.hats);
         shoeCategory = findViewById(R.id.shoes);
-
-        headPhoneCategory= findViewById(R.id.headphones);
-        laptopCategory = findViewById(R.id.laptops);
-        watchCategory = findViewById(R.id.watches);
-        phoneCategory = findViewById(R.id.mobiles);
 
         logoutBtn = findViewById(R.id.admin_logout_btn);
         checkNewOrdersBtn = findViewById(R.id.check_orders_btn);

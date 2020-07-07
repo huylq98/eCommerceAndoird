@@ -32,7 +32,7 @@ import java.util.HashMap;
 
 public class AdminMaintainProductsActivity extends AppCompatActivity {
 
-    private Button applyChangesBtn;
+    private Button applyChangesBtn, deleteProductBtn;
     private EditText etProductName, etProductPrice, etProductDescription;
     private ImageView imageView;
     private String productID = "";
@@ -52,6 +52,29 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
                 applyChanges();
             }
         });
+
+        deleteProductBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteProduct();
+            }
+        });
+    }
+
+    private void deleteProduct() {
+        productRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(AdminMaintainProductsActivity.this, "Product deleted!", Toast.LENGTH_SHORT).show();
+                redirectToAdmin();
+            }
+        });
+    }
+
+    private void redirectToAdmin() {
+        Intent intent = new Intent(AdminMaintainProductsActivity.this, AdminCategoryActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void displayProductInfo() {
@@ -73,7 +96,6 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
     }
@@ -97,10 +119,7 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful()){
                         Toast.makeText(AdminMaintainProductsActivity.this, "Applied successfully!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(AdminMaintainProductsActivity.this, HomeActivity.class);
-                        intent.putExtra("Admin", "Admin");
-                        startActivity(intent);
-                        finish();
+                        redirectToAdmin();
                     }
                 }
             });
@@ -111,6 +130,7 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
         productID = getIntent().getStringExtra("ProductID");
 
         applyChangesBtn = findViewById(R.id.apply_changes_btn);
+        deleteProductBtn = findViewById(R.id.delete_product_btn);
         etProductName = findViewById(R.id.etProductName);
         etProductPrice = findViewById(R.id.etProductPrice);
         etProductDescription = findViewById(R.id.etProductDescription);

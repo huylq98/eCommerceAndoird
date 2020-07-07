@@ -21,10 +21,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.project.ecommerce.model.AdminOrder;
 
+import java.util.HashMap;
+
 public class AdminViewNewOrdersActivity extends AppCompatActivity {
 
     private RecyclerView ordersList;
-    private DatabaseReference ordersRef;
+    private DatabaseReference ordersRef, cartsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class AdminViewNewOrdersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_view_new_orders);
 
         ordersRef = FirebaseDatabase.getInstance().getReference().child("Orders");
+        cartsRef = FirebaseDatabase.getInstance().getReference().child("Carts").child("User");
 
         ordersList = findViewById(R.id.orders_list);
         ordersList.setLayoutManager(new LinearLayoutManager(this));
@@ -55,6 +58,7 @@ public class AdminViewNewOrdersActivity extends AppCompatActivity {
                         adminOrderViewHolder.useraddress.setText("Address: " + adminOrder.getAddress());
                         adminOrderViewHolder.dateTime.setText("Ordered at: " + adminOrder.getDate() + "   " + adminOrder.getTime());
                         adminOrderViewHolder.totalAmount.setText("Total: " + adminOrder.getTotalAmount());
+                        adminOrderViewHolder.orderState.setText("State: " + adminOrder.getState());
 
                         adminOrderViewHolder.showOrdersBtn.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -69,23 +73,27 @@ public class AdminViewNewOrdersActivity extends AppCompatActivity {
                         adminOrderViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                CharSequence options[] = new CharSequence[] {
-                                        "Yes",
-                                        "No"
-                                };
-
                                 AlertDialog.Builder builder = new AlertDialog.Builder(AdminViewNewOrdersActivity.this);
-                                builder.setTitle("Have you shipped this order?");
-                                builder.setItems(options, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        if(which == 0) {
-                                            String userID = getRef(i).getKey();
-                                            removeOrder(userID);
-                                        } else {
+                                if(adminOrder.getState().equals("Ordered")) {
+                                    CharSequence options[] = new CharSequence[] {
+                                            "Yes",
+                                            "No"
+                                    };
+
+
+                                    builder.setTitle("Have you shipped this order?");
+                                    builder.setItems(options, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            if(which == 0) {
+                                                String userID = getRef(i).getKey();
+                                                confirmOrder(userID);
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                } else {
+                                    builder.setMessage("You have already shipped this order!");
+                                }
                                 builder.show();
                             }
                         });
@@ -102,14 +110,15 @@ public class AdminViewNewOrdersActivity extends AppCompatActivity {
         adapter.startListening();
     }
 
-    private void removeOrder(String userID) {
-        ordersRef.child(userID).removeValue();
-        FirebaseDatabase.getInstance().getReference()
-                .child("Carts").child(userID).removeValue();
+    private void confirmOrder(String userID) {
+        HashMap<String, Object> ordersMap = new HashMap<>();
+        ordersMap.put("state", "Delivered");
+        ordersRef.child(userID).updateChildren(ordersMap);
+        cartsRef.child(userID).removeValue();
     }
 
     public static class AdminOrderViewHolder extends RecyclerView.ViewHolder {
-        TextView username, userphone, totalAmount, dateTime, useraddress;
+        TextView username, userphone, totalAmount, dateTime, useraddress, orderState;
         Button showOrdersBtn;
 
         AdminOrderViewHolder(@NonNull View itemView) {
@@ -120,6 +129,7 @@ public class AdminViewNewOrdersActivity extends AppCompatActivity {
             totalAmount = itemView.findViewById(R.id.order_total_price);
             dateTime = itemView.findViewById(R.id.order_date_time);
             useraddress = itemView.findViewById(R.id.order_address);
+            orderState = itemView.findViewById(R.id.order_state);
             showOrdersBtn = itemView.findViewById(R.id.show_all_products_btn);
         }
     }

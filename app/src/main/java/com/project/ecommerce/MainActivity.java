@@ -55,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
         String userPhoneKey = Paper.book().read(Prevalent.userPhoneKey);
         String userPasswordKey = Paper.book().read(Prevalent.userPasswordKey);
 
-        if(userPhoneKey != null  && userPasswordKey != null) {
-            if(!TextUtils.isEmpty(userPasswordKey) && !TextUtils.isEmpty(userPasswordKey)) {
+        if (userPhoneKey != null && userPasswordKey != null) {
+            if (!TextUtils.isEmpty(userPasswordKey) && !TextUtils.isEmpty(userPasswordKey)) {
                 processAccess(userPhoneKey, userPasswordKey);
 
                 loadingBar.setTitle("Already Logged In");
@@ -68,8 +68,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void processAccess(final String phoneNumber, final String password) {
-        final DatabaseReference rootRef;
-        rootRef = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
 
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -78,29 +77,25 @@ public class MainActivity extends AppCompatActivity {
                     if (dataSnapshot.child("Users").child(phoneNumber).exists()) {
                         User user = dataSnapshot.child("Users").child(phoneNumber).getValue(User.class);
 
-                        if (user.getPhone().equals(phoneNumber)) {
-                            if(user.getPassword().equals(password)) {
+                        if (user.getPassword().equals(password)) {
+                            Toast.makeText(MainActivity.this, "Logged in successfully.", Toast.LENGTH_SHORT).show();
+                            loadingBar.dismiss();
+
+                            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                            Prevalent.currentOnlineUser = user;
+                            startActivity(intent);
+                        }
+
+                        if (dataSnapshot.child("Admins").child(phoneNumber).exists()) {
+                            User admin = dataSnapshot.child("Admins").child(phoneNumber).getValue(User.class);
+
+                            if (admin.getPassword().equals(password)) {
                                 Toast.makeText(MainActivity.this, "Logged in successfully.", Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
 
-                                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                                Prevalent.currentOnlineUser = user;
+                                Intent intent = new Intent(MainActivity.this, AdminCategoryActivity.class);
+                                Prevalent.currentOnlineUser = admin;
                                 startActivity(intent);
-                            }
-                        }
-
-                        if(dataSnapshot.child("Admins").child(phoneNumber).exists()) {
-                            User admin = dataSnapshot.child("Admins").child(phoneNumber).getValue(User.class);
-
-                            if (admin.getPhone().equals(phoneNumber)) {
-                                if (admin.getPassword().equals(password)) {
-                                    Toast.makeText(MainActivity.this, "Logged in successfully.", Toast.LENGTH_SHORT).show();
-                                    loadingBar.dismiss();
-
-                                    Intent intent = new Intent(MainActivity.this, AdminCategoryActivity.class);
-                                    Prevalent.currentOnlineUser = admin;
-                                    startActivity(intent);
-                                }
                             }
                         }
                     }

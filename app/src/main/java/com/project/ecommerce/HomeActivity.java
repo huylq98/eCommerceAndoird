@@ -66,8 +66,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-                startActivity(intent);
+                if(!type.equals("Admin")) {
+                    Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -166,14 +168,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.nav_cart) {
+        if(id == R.id.nav_cart && !type.equals("Admin")) {
             Intent intent = new Intent(HomeActivity.this, CartActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_search) {
             Intent intent = new Intent(HomeActivity.this, SearchProductActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_category) {
-
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(HomeActivity.this, SettingsActivity.class);
             startActivity(intent);

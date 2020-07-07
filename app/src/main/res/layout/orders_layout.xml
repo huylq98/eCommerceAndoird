@@ -70,6 +70,18 @@
             android:layout_marginTop="25dp"
             android:layout_below="@id/order_address"/>
 
+        <TextView
+            android:id="@+id/order_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="State"
+            android:textColor="@android:color/white"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="25dp"
+            android:layout_below="@id/order_date_time"/>
+
         <Button
             android:id="@+id/show_all_products_btn"
             android:layout_width="match_parent"
@@ -81,7 +93,7 @@
             android:text="Show Order's Products"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="18dp"
-            android:layout_below="@id/order_date_time"/>
+            android:layout_below="@id/order_state"/>
 
     </RelativeLayout>
 

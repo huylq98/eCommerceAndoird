@@ -67,7 +67,7 @@ public class CartActivity extends AppCompatActivity {
 
         FirebaseRecyclerOptions<Cart> options =
                 new FirebaseRecyclerOptions.Builder<Cart>()
-                .setQuery(cartListRef.child(Prevalent.currentOnlineUser.getPhone()).child("Products"), Cart.class)
+                .setQuery(cartListRef.child("User").child(Prevalent.currentOnlineUser.getPhone()).child("Products"), Cart.class)
                         .build();
 
         FirebaseRecyclerAdapter<Cart, CartViewHolder> adapter =
@@ -100,8 +100,10 @@ public class CartActivity extends AppCompatActivity {
                                                 startActivity(intent);
                                             }
                                             if(which == 1) {
+                                                cartListRef.child("Admin").child(Prevalent.currentOnlineUser.getPhone())
+                                                        .child("Products").child(cart.getId()).removeValue();
 
-                                                cartListRef.child(Prevalent.currentOnlineUser.getPhone())
+                                                cartListRef.child("User").child(Prevalent.currentOnlineUser.getPhone())
                                                         .child("Products")
                                                         .child(cart.getId())
                                                         .removeValue()

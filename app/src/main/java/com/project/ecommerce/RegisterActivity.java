@@ -68,8 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void ValidateAccount(final String name, final String phoneNumber, final String password) {
-        final DatabaseReference rootRef;
-        rootRef = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
 
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

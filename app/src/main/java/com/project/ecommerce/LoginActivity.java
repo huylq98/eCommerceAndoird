@@ -101,8 +101,7 @@ public class LoginActivity extends AppCompatActivity {
             Paper.book().write(Prevalent.userPasswordKey, password);
         }
 
-        final DatabaseReference rootRef;
-        rootRef = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
 
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -110,27 +109,25 @@ public class LoginActivity extends AppCompatActivity {
                 if (dataSnapshot.child(parentDBName).child(phoneNumber).exists()) {
                     User user = dataSnapshot.child(parentDBName).child(phoneNumber).getValue(User.class);
 
-                    if (user.getPhone().equals(phoneNumber)) {
-                        if (user.getPassword().equals(password)) {
-                            if (parentDBName.equals("Admins")) {
-                                Toast.makeText(LoginActivity.this, "Welcome admin, you are logged in successfully.", Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
-
-                                Intent intent = new Intent(LoginActivity.this, AdminCategoryActivity.class);
-                                Prevalent.currentOnlineUser = user;
-                                startActivity(intent);
-                            } else if (parentDBName.equals("Users")) {
-                                Toast.makeText(LoginActivity.this, "Logged in successfully.", Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
-
-                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                Prevalent.currentOnlineUser = user;
-                                startActivity(intent);
-                            }
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Logged in failed.", Toast.LENGTH_SHORT).show();
+                    if (user.getPassword().equals(password)) {
+                        if (parentDBName.equals("Admins")) {
+                            Toast.makeText(LoginActivity.this, "Welcome admin, you are logged in successfully.", Toast.LENGTH_SHORT).show();
                             loadingBar.dismiss();
+
+                            Intent intent = new Intent(LoginActivity.this, AdminCategoryActivity.class);
+                            Prevalent.currentOnlineUser = user;
+                            startActivity(intent);
+                        } else if (parentDBName.equals("Users")) {
+                            Toast.makeText(LoginActivity.this, "Logged in successfully.", Toast.LENGTH_SHORT).show();
+                            loadingBar.dismiss();
+
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            Prevalent.currentOnlineUser = user;
+                            startActivity(intent);
                         }
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Logged in failed.", Toast.LENGTH_SHORT).show();
+                        loadingBar.dismiss();
                     }
                 } else {
                     Toast.makeText(LoginActivity.this, "Account with this " + phoneNumber + " does not exist.", Toast.LENGTH_SHORT).show();
