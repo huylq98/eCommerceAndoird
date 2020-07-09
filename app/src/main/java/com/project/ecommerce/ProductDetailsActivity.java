@@ -36,6 +36,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private ElegantNumberButton productQuantityBtn;
     private TextView productName, productDescription, productPrice;
     private String productID = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +68,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         saveCurrentDate = currentDate.format(calForDate.getTime());
 
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
-        saveCurrentTime= currentDate.format(calForDate.getTime());
+        saveCurrentTime = currentTime.format(calForDate.getTime());
 
         final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Carts");
 
@@ -80,15 +81,15 @@ public class ProductDetailsActivity extends AppCompatActivity {
         cartMap.put("quantity", productQuantityBtn.getNumber());
         cartMap.put("discount", "");
 
-        cartListRef.child("Admin").child(Prevalent.currentOnlineUser.getPhone())
-                .child("Products").child(productID).updateChildren(cartMap);
+//        cartListRef.child("Admin").child(Prevalent.currentOnlineUser.getPhone())
+//                .child("Products").child(productID).updateChildren(cartMap);
 
         cartListRef.child("User").child(Prevalent.currentOnlineUser.getPhone())
                 .child("Products").child(productID).updateChildren(cartMap)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()) {
+                        if (task.isSuccessful()) {
                             Toast.makeText(ProductDetailsActivity.this, "Added to Cart!", Toast.LENGTH_SHORT).show();
 
                             Intent intent = new Intent(ProductDetailsActivity.this, HomeActivity.class);
@@ -103,7 +104,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         productsRef.child(productID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     Product product = dataSnapshot.getValue(Product.class);
 
                     productName.setText(product.getName());

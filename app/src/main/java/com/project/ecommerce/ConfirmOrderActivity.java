@@ -1,6 +1,7 @@
 package com.project.ecommerce;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,8 +14,12 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.project.ecommerce.prevalent.Prevalent;
 
 import java.text.SimpleDateFormat;
@@ -56,11 +61,11 @@ public class ConfirmOrderActivity extends AppCompatActivity {
     }
 
     private void checkInfo() {
-        if(TextUtils.isEmpty(etName.getText().toString().trim())){
+        if (TextUtils.isEmpty(etName.getText().toString().trim())) {
             Toast.makeText(this, "Please enter your name.", Toast.LENGTH_SHORT).show();
-        } else if(TextUtils.isEmpty(etPhone.getText().toString().trim())){
+        } else if (TextUtils.isEmpty(etPhone.getText().toString().trim())) {
             Toast.makeText(this, "Please enter your phone number.", Toast.LENGTH_SHORT).show();
-        } else if(TextUtils.isEmpty(etAddress.getText().toString().trim())){
+        } else if (TextUtils.isEmpty(etAddress.getText().toString().trim())) {
             Toast.makeText(this, "Please enter your address.", Toast.LENGTH_SHORT).show();
         } else {
             confirmOrder();
@@ -68,18 +73,18 @@ public class ConfirmOrderActivity extends AppCompatActivity {
     }
 
     private void confirmOrder() {
-        String saveCurrentDate, saveCurrentTime;
+        final String saveCurrentDate, saveCurrentTime;
         Calendar calForDate = Calendar.getInstance();
         SimpleDateFormat currentDate = new SimpleDateFormat("MM dd, yyyy");
         saveCurrentDate = currentDate.format(calForDate.getTime());
 
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
-        saveCurrentTime= currentTime.format(calForDate.getTime());
+        saveCurrentTime = currentTime.format(calForDate.getTime());
 
-        final DatabaseReference cartsRef = FirebaseDatabase.getInstance().getReference().child("Carts").child("Users");
+        final DatabaseReference cartsRef = FirebaseDatabase.getInstance().getReference().child("Carts");
         final DatabaseReference ordersRef = FirebaseDatabase.getInstance().getReference()
                 .child("Orders")
-                .child(Prevalent.currentOnlineUser.getPhone());
+                .child(Prevalent.currentOnlineUser.getPhone() + saveCurrentDate + saveCurrentTime);
 
         HashMap<String, Object> ordersMap = new HashMap<>();
         ordersMap.put("totalAmount", totalAmount);
@@ -93,8 +98,34 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         ordersRef.updateChildren(ordersMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()) {
-                    cartsRef.child(Prevalent.currentOnlineUser.getPhone()).removeValue();
+                if (task.isSuccessful()) {
+                    cartsRef.child("User").child(Prevalent.currentOnlineUser.getPhone()).addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            cartsRef.child("Admin").child(Prevalent.currentOnlineUser.getPhone() + saveCurrentDate + saveCurrentTime).child("Products").setValue(dataSnapshot.getValue());
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                            cartsRef.child("Admin").child(Prevalent.currentOnlineUser.getPhone() + saveCurrentDate + saveCurrentTime).child("Products").setValue(dataSnapshot.getValue());
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                    cartsRef.child("User").child(Prevalent.currentOnlineUser.getPhone()).removeValue();
                     Toast.makeText(ConfirmOrderActivity.this, "Order successfully!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ConfirmOrderActivity.this, HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -215,6 +215,22 @@ public class SettingsActivity extends AppCompatActivity {
                         userPhoneEditText.setText(phone);
                         passwordEditText.setText(password);
                         addressEditText.setText(address);
+                    } else if(dataSnapshot.child("address").exists()) {
+                        String name = dataSnapshot.child("name").getValue().toString();
+                        String phone = dataSnapshot.child("phone").getValue().toString();
+                        String password = dataSnapshot.child("password").getValue().toString();
+                        String address = dataSnapshot.child("address").getValue().toString();
+                        fullNameEditText.setText(name);
+                        userPhoneEditText.setText(phone);
+                        passwordEditText.setText(password);
+                        addressEditText.setText(address);
+                    } else {
+                        String name = dataSnapshot.child("name").getValue().toString();
+                        String phone = dataSnapshot.child("phone").getValue().toString();
+                        String password = dataSnapshot.child("password").getValue().toString();
+                        fullNameEditText.setText(name);
+                        userPhoneEditText.setText(phone);
+                        passwordEditText.setText(password);
                     }
                 }
             }

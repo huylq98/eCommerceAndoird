@@ -20,8 +20,11 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.project.ecommerce.model.Cart;
 import com.project.ecommerce.prevalent.Prevalent;
 import com.project.ecommerce.viewholder.CartViewHolder;
@@ -64,6 +67,7 @@ public class CartActivity extends AppCompatActivity {
         super.onStart();
 
         final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Carts");
+
 
         FirebaseRecyclerOptions<Cart> options =
                 new FirebaseRecyclerOptions.Builder<Cart>()
